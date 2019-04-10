@@ -114,7 +114,8 @@ public class BaseController {
     }
 
     protected String view(String view) {
-        return "/" + siteOptions.getValue("theme") + view;
+        String theme = "/" + siteOptions.getValue("theme") + view;
+        return theme;
     }
 
     protected Result<AccountProfile> executeLogin(String username, String password, boolean rememberMe) {

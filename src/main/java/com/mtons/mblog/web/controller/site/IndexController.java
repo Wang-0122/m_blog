@@ -58,15 +58,25 @@ public class IndexController extends BaseController{
 				mailSender.send(message);
 			}
 		}).start();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				message.setTo("2290353065@qq.com");
-				mailSender.send(message);
-			}
-		}).start();
 
-		return view(Views.INDEX);
+
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				message.setTo("2290353065@qq.com");
+//				mailSender.send(message);
+//			}
+//		}).start();
+
+		String view = view(Views.INDEX);
+		return view;
+	}
+
+	@RequestMapping(value= {"/lesley"})
+	public String lesley(ModelMap model, HttpServletRequest request) {
+
+		String view = view("/lesley");
+		return view;
 	}
 
 }

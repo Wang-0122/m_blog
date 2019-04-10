@@ -7,6 +7,10 @@ server:
         buffer-size: 1024
         directBuffers: true
 spring:
+#spring.application.admin.enabled=false
+    application:
+    admin:
+      enabled: false
     profiles:
         active: @profileActive@
     devtools:
