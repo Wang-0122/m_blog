@@ -1,5 +1,6 @@
 function indexSubmit() {
     window.location.href="/index";
+    console.log("${base}");
 }
 // Utilities
 var Vector3 = {};

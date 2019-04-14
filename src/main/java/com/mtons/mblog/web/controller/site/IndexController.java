@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.mtons.mblog.base.lang.Consts;
 import com.mtons.mblog.base.utils.IPKit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,9 @@ public class IndexController extends BaseController{
 
 	@Autowired
 	private JavaMailSender mailSender;
+
+	@Value("${music.path1}")
+	private String musicPath;
 
 	@RequestMapping(value= {"/", "/index"})
 	public String root(ModelMap model, HttpServletRequest request) {
@@ -76,6 +80,7 @@ public class IndexController extends BaseController{
 	public String lesley(ModelMap model, HttpServletRequest request) {
 
 		String view = view("/lesley");
+		model.put("musicPath",musicPath);
 		return view;
 	}
 

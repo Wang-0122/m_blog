@@ -7,10 +7,14 @@ import com.mtons.mblog.base.lang.Consts;
 import com.mtons.mblog.base.lang.Result;
 import com.mtons.mblog.modules.data.AccountProfile;
 import com.mtons.mblog.modules.data.CommentVO;
+import com.mtons.mblog.modules.entity.PushMail;
+import com.mtons.mblog.modules.entity.User;
 import com.mtons.mblog.modules.event.MessageEvent;
 import com.mtons.mblog.modules.service.CommentService;
+import com.mtons.mblog.modules.service.PushMailService;
 import com.mtons.mblog.web.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
@@ -37,6 +41,8 @@ public class CommentController extends BaseController {
     private CommentService commentService;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private PushMailService pushMailService;
 
     @RequestMapping("/list/{toId}")
     public Page<CommentVO> view(@PathVariable Long toId) {
@@ -44,6 +50,13 @@ public class CommentController extends BaseController {
         return commentService.pagingByPostId(pageable, toId);
     }
 
+    /**
+     * 评论操作
+     * @param toId
+     * @param text
+     * @param request
+     * @return
+     */
     @RequestMapping("/submit")
     public Result post(Long toId, String text, HttpServletRequest request) {
         if (!isAuthenticated()) {
@@ -66,6 +79,18 @@ public class CommentController extends BaseController {
         c.setPid(pid);
 
         commentService.post(c);
+
+        String content = c.getContent().replaceAll(" ", "");
+        //当提交内容仅为邮箱时，将邮箱存入db
+        if(content.contains("@") && c.getContent().length() < 20){
+            Object principal = SecurityUtils.getSubject().getPrincipal();
+            AccountProfile user = (AccountProfile) principal;
+            PushMail mail = new PushMail();
+            mail.setName(user.getUsername());
+            mail.setStatus(1);
+            mail.setEmail(content);
+            pushMailService.save(mail);
+        }
 
         if (toId != profile.getId()) {
             sendMessage(profile.getId(), toId, pid);

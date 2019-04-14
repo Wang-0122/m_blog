@@ -1,3 +1,8 @@
+music:
+    path1: \\music\\qfl-china.mp3
+    path2: \\music\\qfl-japan.mp3
+
+
 server:
     port: 8080
     use-forward-headers: true

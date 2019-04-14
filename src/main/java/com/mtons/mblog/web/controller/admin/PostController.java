@@ -13,8 +13,10 @@ import com.mtons.mblog.base.lang.Consts;
 import com.mtons.mblog.base.lang.Result;
 import com.mtons.mblog.modules.data.AccountProfile;
 import com.mtons.mblog.modules.data.PostVO;
+import com.mtons.mblog.modules.entity.PushMail;
 import com.mtons.mblog.modules.service.ChannelService;
 import com.mtons.mblog.modules.service.PostService;
+import com.mtons.mblog.modules.service.PushMailService;
 import com.mtons.mblog.web.controller.BaseController;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class PostController extends BaseController {
 	private PostService postService;
 	@Autowired
 	private ChannelService channelService;
+	@Autowired PushMailService pushMailService;
 	
 	@RequestMapping("/list")
 	public String list(String title, ModelMap model, HttpServletRequest request) {
@@ -88,12 +91,18 @@ public class PostController extends BaseController {
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String subUpdate(PostVO post) {
 		if (post != null) {
+			List<PushMail> list = pushMailService.findByStaus(1);
 			if (post.getId() > 0) {
 				postService.update(post);
+				pushMailService.pushMail(list,"/post/"+post.getId());
 			} else {
+				//第一次发布文章
 				AccountProfile profile = getProfile();
 				post.setAuthorId(profile.getId());
-				postService.post(post);
+				long id = postService.post(post);
+				//调用异步推送邮件
+
+				pushMailService.pushMail(list,"/post/"+id);
 			}
 		}
 		return "redirect:/admin/post/list";

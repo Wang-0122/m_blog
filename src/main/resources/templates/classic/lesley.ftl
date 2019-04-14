@@ -46,9 +46,9 @@
 <#--<audio controls autoplay="autoplay" loop="loop">
     <source src="${base}/dist/qfl.mp3" type="audio/mpeg" />
 </audio>
-<EMBED style="width: 50px;height: 10px" src="${base}/dist/qfl.mp3" autostart="true" loop="true" />-->
+<EMBED style="width: 50px;height: 10px" src="${musicPath}" autostart="true" loop="true" />-->
 
-<audio style="display:none; height: 0" id="bg-music" preload="auto" src="${base}/dist/qfl1.mp3" loop="loop"></audio>
+<audio style="display:none; height: 0" id="bg-music" preload="auto" src="${base}/dist/qfl-china.mp3" loop="loop"></audio>
 
 <!-- sakura shader -->
 <script id="sakura_point_vsh" type="x-shader/x_vertex">
