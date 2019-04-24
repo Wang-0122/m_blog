@@ -59,15 +59,13 @@ public class PushMailServiceImpl implements PushMailService {
                 message.setSubject("博客更新通知!");
 
                 message.setText("亲爱的"+mail.getName()+"您好！您关注的博客更新啦！请点击链接  https://www.yilukkk.com"+path+"  访问吧!");
-                IndexController.fixedThreadPool.execute(new Thread(new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         message.setTo(mail.getEmail());
                         mailSender.send(message);
                     }
-                }));
-                ;
-
+                }).start();
             }
         }
         return null;

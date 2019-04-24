@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
 @Controller
 public class IndexController extends BaseController{
 
-	public static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
+//	public static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
 
 	@Autowired
 	private JavaMailSender mailSender;
@@ -63,21 +63,23 @@ public class IndexController extends BaseController{
 		String ip = IPKit.getIpAddrByRequest(request);
 		message.setText("ip为:" + ip + "  ,使用了"+device+"设备，刚刚访问了你的网站:https://www.yilukkk.com  时间为：" + new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(new Date()));
 
-		fixedThreadPool.execute(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				mailSender.send(message);
-			}
-		}));
-
-
-//		new Thread(new Runnable() {
+//		fixedThreadPool.execute(new Runnable() {
 //			@Override
 //			public void run() {
-//				message.setTo("2290353065@qq.com");
 //				mailSender.send(message);
+//				System.out.println("邮件已发送...");
 //			}
-//		}).start();
+//		});
+
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				message.setTo("2290353065@qq.com");
+				mailSender.send(message);
+		System.out.println("邮件已发送...");
+			}
+		}).start();
 
 		String view = view(Views.INDEX);
 		return view;
