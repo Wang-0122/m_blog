@@ -26,6 +26,8 @@ import com.mtons.mblog.web.controller.BaseController;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author langhsu
@@ -34,11 +36,16 @@ import java.util.Date;
 @Controller
 public class IndexController extends BaseController{
 
+	public static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
+
 	@Autowired
 	private JavaMailSender mailSender;
 
 	@Value("${music.path1}")
 	private String musicPath;
+
+	@Value("${site.location}")
+	private String location;
 
 	@RequestMapping(value= {"/", "/index"})
 	public String root(ModelMap model, HttpServletRequest request) {
@@ -56,12 +63,12 @@ public class IndexController extends BaseController{
 		String ip = IPKit.getIpAddrByRequest(request);
 		message.setText("ip为:" + ip + "  ,使用了"+device+"设备，刚刚访问了你的网站:https://www.yilukkk.com  时间为：" + new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒").format(new Date()));
 
-		new Thread(new Runnable() {
+		fixedThreadPool.execute(new Thread(new Runnable() {
 			@Override
 			public void run() {
 				mailSender.send(message);
 			}
-		}).start();
+		}));
 
 
 //		new Thread(new Runnable() {

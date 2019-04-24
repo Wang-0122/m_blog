@@ -57,6 +57,8 @@
     <!-- Favicons -->
     <link href="<@resource src=options['site_favicon']/>" rel="apple-touch-icon-precomposed" />
     <link href="<@resource src=options['site_favicon']/>" rel="shortcut icon" />
+
+
 </head>
 <body>
     <!-- header -->

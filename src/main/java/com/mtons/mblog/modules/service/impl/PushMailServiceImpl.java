@@ -3,6 +3,7 @@ package com.mtons.mblog.modules.service.impl;
 import com.mtons.mblog.modules.entity.PushMail;
 import com.mtons.mblog.modules.repository.PushMailRepository;
 import com.mtons.mblog.modules.service.PushMailService;
+import com.mtons.mblog.web.controller.site.IndexController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -58,13 +59,14 @@ public class PushMailServiceImpl implements PushMailService {
                 message.setSubject("博客更新通知!");
 
                 message.setText("亲爱的"+mail.getName()+"您好！您关注的博客更新啦！请点击链接  https://www.yilukkk.com"+path+"  访问吧!");
-                new Thread(new Runnable() {
+                IndexController.fixedThreadPool.execute(new Thread(new Runnable() {
                     @Override
                     public void run() {
                         message.setTo(mail.getEmail());
                         mailSender.send(message);
                     }
-                }).start();
+                }));
+                ;
 
             }
         }
